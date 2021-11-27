@@ -1,0 +1,1 @@
+select * from mydb.salaries where salary > 10000;
