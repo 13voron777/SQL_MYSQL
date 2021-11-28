@@ -1,1 +1,0 @@
-UPDATE `mydb`.`personal_data` SET `marital status` = 'married' WHERE (`id_employee` = '1');
