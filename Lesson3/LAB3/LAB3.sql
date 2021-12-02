@@ -150,3 +150,9 @@ ADD CONSTRAINT `theme`
   REFERENCES `publishing`.`2f_themes` (`idthemes`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+
+ALTER TABLE `publishing`.`2f_books_sales` 
+DROP COLUMN `DrawingOfBook`;
+
+ALTER TABLE `publishing`.`2f_books_info` 
+ADD COLUMN `DrawingOfBook` INT NULL AFTER `PriceOfBook`;
