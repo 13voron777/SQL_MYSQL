@@ -63,3 +63,90 @@ INSERT INTO `publishing`.`1f_books_info` (`idBook`, `NameBook`, `NameTheme`, `Pr
 INSERT INTO `publishing`.`1f_books_sales` (`sale_id`, `id_book`, `DrawingOfBook`, `Price`, `Quantity`, `NameShop`, `NameCountry`) VALUES ('1', '1', '10', '5', '7', 'Books World', 'USA');
 INSERT INTO `publishing`.`1f_books_sales` (`sale_id`, `id_book`, `DrawingOfBook`, `Price`, `Quantity`, `NameShop`, `NameCountry`) VALUES ('2', '2', '15', '7', '10', 'Swiat Ksiazki', 'Poland');
 INSERT INTO `publishing`.`1f_books_sales` (`sale_id`, `id_book`, `DrawingOfBook`, `Price`, `Quantity`, `NameShop`, `NameCountry`) VALUES ('3', '3', '20', '6', '12', 'Auchan', 'Russia');
+
+#2 NF
+CREATE TABLE `publishing`.`2f_country` (
+  `id2f_country` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  PRIMARY KEY (`id2f_country`),
+  UNIQUE INDEX `id2f_country_UNIQUE` (`id2f_country` ASC) VISIBLE);
+
+CREATE TABLE `publishing`.`2f_author` (
+  `id2f_author` INT NOT NULL,
+  `FirstName` VARCHAR(45) NULL,
+  `LastName` VARCHAR(45) NULL,
+  PRIMARY KEY (`id2f_author`),
+  UNIQUE INDEX `id2f_author_UNIQUE` (`id2f_author` ASC) VISIBLE);
+
+ALTER TABLE `publishing`.`2f_author` 
+ADD COLUMN `id_country` INT NULL AFTER `LastName`,
+ADD INDEX `country_author_idx` (`id_country` ASC) VISIBLE;
+;
+ALTER TABLE `publishing`.`2f_author` 
+ADD CONSTRAINT `country_author`
+  FOREIGN KEY (`id_country`)
+  REFERENCES `publishing`.`2f_country` (`id2f_country`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
+
+CREATE TABLE `publishing`.`2f_shops` (
+  `id2f_shops` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  `id_country` INT NULL,
+  PRIMARY KEY (`id2f_shops`),
+  UNIQUE INDEX `id2f_shops_UNIQUE` (`id2f_shops` ASC) VISIBLE,
+  INDEX `country_shop_idx` (`id_country` ASC) VISIBLE,
+  CONSTRAINT `country_shop`
+    FOREIGN KEY (`id_country`)
+    REFERENCES `publishing`.`2f_country` (`id2f_country`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `publishing`.`2f_books_info` (
+  `id_book` INT NOT NULL,
+  `NameBook` VARCHAR(45) NULL,
+  `NameTheme` VARCHAR(45) NULL,
+  `PriceOfBook` FLOAT NULL,
+  `Pages` INT NULL,
+  `id_author` INT NULL,
+  PRIMARY KEY (`id_book`),
+  UNIQUE INDEX `id_book_UNIQUE` (`id_book` ASC) VISIBLE,
+  INDEX `author_idx` (`id_author` ASC) VISIBLE,
+  CONSTRAINT `author`
+    FOREIGN KEY (`id_author`)
+    REFERENCES `publishing`.`2f_author` (`id2f_author`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
+
+CREATE TABLE `publishing`.`2f_books_sales` (
+  `sale_id` INT NOT NULL,
+  `id_book` INT NULL,
+  `DrawingOfBook` INT NULL,
+  `Price` FLOAT NULL,
+  `Quantity` INT NULL,
+  `id_shop` INT NULL,
+  PRIMARY KEY (`sale_id`),
+  UNIQUE INDEX `sale_id_UNIQUE` (`sale_id` ASC) VISIBLE,
+  INDEX `shop_idx` (`id_shop` ASC) VISIBLE,
+  CONSTRAINT `shop`
+    FOREIGN KEY (`id_shop`)
+    REFERENCES `publishing`.`2f_shops` (`id2f_shops`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
+
+CREATE TABLE `publishing`.`2f_themes` (
+  `idthemes` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  PRIMARY KEY (`idthemes`),
+  UNIQUE INDEX `idthemes_UNIQUE` (`idthemes` ASC) VISIBLE);
+
+ALTER TABLE `publishing`.`2f_books_info` 
+CHANGE COLUMN `NameTheme` `id_Theme` INT NULL DEFAULT NULL ,
+ADD INDEX `theme_idx` (`id_Theme` ASC) VISIBLE;
+;
+ALTER TABLE `publishing`.`2f_books_info` 
+ADD CONSTRAINT `theme`
+  FOREIGN KEY (`id_Theme`)
+  REFERENCES `publishing`.`2f_themes` (`idthemes`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
