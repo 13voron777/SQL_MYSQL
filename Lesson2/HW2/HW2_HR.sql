@@ -1,3 +1,4 @@
+# Task Extra
 CREATE SCHEMA HW2_HR;
 
 USE HW2_HR;

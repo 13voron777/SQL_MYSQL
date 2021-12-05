@@ -1,3 +1,4 @@
+# Task 2
 CREATE DATABASE hw2;
 
 USE hw2;
