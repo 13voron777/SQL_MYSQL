@@ -75,3 +75,17 @@ VALUES
 (5, 'Женат', '1988-11-02', 'Марсель');
 
 # Task 4
+SELECT e.Name, e.TelephoneNumber, ep.PlaceOfResidence
+FROM Employees e
+JOIN EmployeesPrivate ep ON ep.EmployeeID = e.EmployeeID;
+
+SELECT e.Name, ep.BirthDate, e.TelephoneNumber
+FROM EmployeesPrivate ep
+JOIN Employees e ON e.EmployeeID = ep.EmployeeID
+WHERE ep.MaritalStatus = 'Холост';
+
+SELECT e.Name, ep.BirthDate, e.TelephoneNumber
+FROM Employees e
+JOIN EmployeesPrivate ep ON ep.EmployeeID = e.EmployeeID
+JOIN EmployeesSalaries es ON es.EmployeeID = e.EmployeeID
+WHERE es.Position = 'Менеджер';
