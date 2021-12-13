@@ -1,13 +1,13 @@
 USE ShopDB;
 
-SELECT od.OrderId, SUM(TotalPrice) AS TotalSumPrice, c.FName, c.Mname, c.LName 
-FROM OrderDetails od
-JOIN Orders o1 ON o1.OrderId = od.OrderID
-JOIN Customers c ON c.CustomerNo = o1.CustomerNo
-GROUP BY od.OrderID HAVING TotalSumPrice > 1000;
+SELECT od.OrderId, SUM(TotalPrice) AS TotalSumPrice, concat(c.FName, ' ',  c.Mname, ' ', c.LName) AS FML 
+FROM Customers c
+JOIN Orders o1 ON o1.CustomerNo = c.CustomerNo
+JOIN OrderDetails od ON od.OrderId = o1.OrderId
+GROUP BY FML HAVING TotalSumPrice > 1000;
 
-SELECT od.OrderId, SUM(TotalPrice) AS TotalSumPrice, e.FName, e.Mname, e.LName 
-FROM OrderDetails od
-JOIN Orders o1 ON o1.OrderId = od.OrderID
-JOIN Employees e ON e.EmployeeId = o1.EmployeeId
-GROUP BY od.OrderID HAVING TotalSumPrice > 1000;
+SELECT od.OrderId, SUM(TotalPrice) AS TotalSumPrice, concat(e.FName, ' ', e.Mname, ' ', e.LName) AS FML
+FROM Employees e
+JOIN Orders o1 ON o1.EmployeeID = e.EmployeeID
+JOIN OrderDetails od ON od.OrderId = o1.OrderId
+GROUP BY FML HAVING TotalSumPrice > 1000;

@@ -50,10 +50,48 @@ CALL task3('John', 'Nork'); |
 DROP PROCEDURE task3; |
 
 # 4. Функцию, которая возвращает самую дорогую книгу указанной тематики.
-
+CREATE FUNCTION ExpensiveBook(theme varchar(45))
+RETURNS varchar(45)
+DETERMINISTIC
+BEGIN
+	RETURN 
+    (SELECT bi.NameBook FROM 2f_books_info bi
+    JOIN 2f_themes t ON t.idthemes = bi.id_Theme
+    WHERE bi.PriceOfBook = 
+		(SELECT MAX(PriceOfBook) FROM 2f_books_info
+        GROUP BY id_Theme HAVING id_Theme = t.idthemes)
+	AND t.name = theme
+	GROUP BY bi.id_Theme);
+END
+|
+SELECT t.*, ExpensiveBook(t.name) FROM 2f_themes t;|
+DROP FUNCTION IF EXISTS ExpensiveBook; |
 
 # 5.Написать функцию, которая выводит информацию о количестве авторов,
 # живущих в разных странах (название страны передается в качестве параметра).
-
+CREATE FUNCTION CountAuthors(cname varchar(45))
+RETURNS INT
+DETERMINISTIC
+BEGIN
+	RETURN 
+    (SELECT COUNT(CONCAT(a.FirstName, ' ', a.LastName)) AS CountAuthors FROM 2f_author a
+    JOIN 2f_country c ON a.id_country = c.id2f_country
+    GROUP BY c.name HAVING c.name = cname);
+END
+|
+SELECT c.*, CountAuthors(c.name) FROM 2f_country c;|
+DROP FUNCTION IF EXISTS CountAuthors; |
 
 # 6 Функцию, которая возвращает количество магазинов, которые не продали ни одной книги издательства.
+CREATE FUNCTION NoSales()
+RETURNS INT
+DETERMINISTIC
+BEGIN
+	RETURN 
+    (SELECT COUNT(*) FROM 2f_shops s
+    LEFT JOIN 2f_books_sales bs ON bs.id_shop = s.id2f_shops
+    WHERE bs.id_shop IS NULL);
+END
+|
+SELECT NoSales(); |
+DROP FUNCTION IF EXISTS NoSales; |
