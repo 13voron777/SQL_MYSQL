@@ -1,4 +1,4 @@
-USE publishing;
+USE publsublab65ishing;
 
 # 1.Создайте кластеризованный индекс по имени автора для таблицы Authors.
 CREATE INDEX FirstName ON 2f_author(FirstName);
@@ -19,11 +19,12 @@ CREATE INDEX FirstName ON 2f_author(FirstName);
 SELECT * FROM 2f_author;
 
 # 5.Написать представление, которое будет отображать информацию о книгах, которые имели тираж более 10 экземпляров.
+
 CREATE VIEW SubLab65 AS
 SELECT bi.*, SUM(bs.Quantity) AS TotalQuantity FROM 2f_books_info bi
 JOIN 2f_books_sales bs ON bi.id_book = bs.id_book
-GROUP BY bs.id_book;
-SELECT * FROM SubLab65 WHERE TotalQuantity > 10;
+GROUP BY bs.id_book HAVING TotalQuantity > 10;
+SELECT * FROM SubLab65;
 
 # 6. Написать представление, которое содержит информацию о суммах, на которые были проданы книги каждым магазином.
 CREATE VIEW SubLab66 AS
