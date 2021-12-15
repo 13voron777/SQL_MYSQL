@@ -91,10 +91,15 @@ SELECT e.Name,
 FROM Employees e
 HAVING BirthDate IS NOT NULL;
 
-SELECT e.Name, (
+SELECT e.Name, 
+	(
     SELECT ep.BirthDate FROM EmployeesPrivate ep
     WHERE ep.EmployeeID = e.EmployeeID 
     ) AS BirthDate, e.TelephoneNumber
 FROM Employees e
-JOIN EmployeesSalaries es ON es.EmployeeID = e.EmployeeID
-WHERE es.Position = 'Менеджер';
+WHERE e.EmployeeID = 
+	(
+    SELECT es.EmployeeID FROM EmployeesSalaries es
+    WHERE es.EmployeeID = e.EmployeeID 
+    AND es.Position = 'Менеджер' 
+    )
