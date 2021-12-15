@@ -88,7 +88,8 @@ SELECT e.Name,
     AND ep.MaritalStatus = 'Холост'
     ) AS BirthDate, 
     e.TelephoneNumber
-FROM Employees e;
+FROM Employees e
+HAVING BirthDate IS NOT NULL;
 
 SELECT e.Name, (
     SELECT ep.BirthDate FROM EmployeesPrivate ep
